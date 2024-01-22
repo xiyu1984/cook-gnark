@@ -20,7 +20,7 @@ import (
 
 func main() {
 	var x_vec []frontend.Variable
-	x_len := 5
+	x_len := 10
 	// x_vec = make([]frontend.Variable, x_len)
 	res := 1
 	for i := 0; i < x_len; i++ {
@@ -33,18 +33,25 @@ func main() {
 
 	res += s
 
-	var t = circuit.TCircuit{
-		X: x_vec,
-		S: frontend.Variable(s),
-		Y: frontend.Variable(res),
+	// for public inputs
+	t := &circuit.TCircuit{
+		X: make([]frontend.Variable, x_len), //SHOULD ALLOCATE HERE
 	}
 
-	ccs, err := frontend.Compile(ecc.BN254.ScalarField(), scs.NewBuilder, &t)
+	// for secret inputs
+	// t := &circuit.TCircuit{
+	// 	X: x_vec,
+	// 	S: frontend.Variable(s),
+	// 	Y: frontend.Variable(res),
+	// }
+
+	ccs, err := frontend.Compile(ecc.BN254.ScalarField(), scs.NewBuilder, t)
 	if err != nil {
 		fmt.Println("circuit compilation error")
 	}
 
 	scs := ccs.(*cs.SparseR1CS)
+	// NB! Unsafe, use MPC!!!
 	srs, srsLagrange, err := unsafekzg.NewSRS(scs, unsafekzg.WithFSCache())
 	if err != nil {
 		panic(err)
