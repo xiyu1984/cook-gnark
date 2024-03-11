@@ -1,2 +1,4 @@
 *.proof
 *.sol
+*.exe
+*.wit

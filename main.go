@@ -78,6 +78,12 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		fWitness, _ := os.Create("public.wit")
+		witnessPublic.WriteTo(fWitness)
+		// schema, _ := frontend.NewSchema(&w)
+		// wpis_json, _ := witnessPublic.ToJSON(schema)
+		// fWitness.Write(wpis_json)
+		fWitness.Close()
 
 		// public data consists of the polynomials describing the constants involved
 		// in the constraints, the polynomial describing the permutation ("grand
