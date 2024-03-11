@@ -8,6 +8,7 @@ import (
 	"gnark/cook-gnark/circuit"
 
 	"github.com/consensys/gnark/backend/plonk"
+	plonk_bn254 "github.com/consensys/gnark/backend/plonk/bn254"
 	"github.com/consensys/gnark/frontend"
 
 	cs "github.com/consensys/gnark/constraint/bn254"
@@ -79,10 +80,10 @@ func main() {
 			log.Fatal(err)
 		}
 		fWitness, _ := os.Create("public.wit")
-		witnessPublic.WriteTo(fWitness)
-		// schema, _ := frontend.NewSchema(&w)
-		// wpis_json, _ := witnessPublic.ToJSON(schema)
-		// fWitness.Write(wpis_json)
+		// witnessPublic.WriteTo(fWitness)
+		schema, _ := frontend.NewSchema(&w)
+		wpis_json, _ := witnessPublic.ToJSON(schema)
+		fWitness.Write(wpis_json)
 		fWitness.Close()
 
 		// public data consists of the polynomials describing the constants involved
@@ -108,7 +109,9 @@ func main() {
 		_ = vk.ExportSolidity(fSolidity)
 
 		fProof, _ := os.Create("proof.proof")
-		proof.WriteTo(fProof)
+		_proof := proof.(*plonk_bn254.Proof)
+		proof_marshal := _proof.MarshalSolidity()
+		fProof.Write(proof_marshal)
 		fProof.Close()
 	}
 }
