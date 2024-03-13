@@ -1,0 +1,3 @@
+[submodule "gnark-verifier"]
+	path = gnark-verifier
+	url = git@github.com:xiyu1984/gnark-verifier.git

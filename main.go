@@ -79,7 +79,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fWitness, _ := os.Create("public.wit")
+		fWitness, _ := os.Create("./gnark-verifier/data/add_public.wit")
 		// witnessPublic.WriteTo(fWitness)
 		schema, _ := frontend.NewSchema(&w)
 		wpis_json, _ := witnessPublic.ToJSON(schema)
@@ -105,10 +105,10 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fSolidity, _ := os.Create("verifier.sol")
+		fSolidity, _ := os.Create("./gnark-verifier/contracts/PlonkVerifier.sol")
 		_ = vk.ExportSolidity(fSolidity)
 
-		fProof, _ := os.Create("proof.proof")
+		fProof, _ := os.Create("./gnark-verifier/data/add_proof.proof")
 		_proof := proof.(*plonk_bn254.Proof)
 		proof_marshal := _proof.MarshalSolidity()
 		fProof.Write(proof_marshal)
